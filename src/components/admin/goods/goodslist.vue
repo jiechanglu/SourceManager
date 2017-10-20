@@ -1,0 +1,187 @@
+<template>
+    <div class="tmpl">
+        <!-- 第二行 -->
+        <el-row>
+            <el-col span="24">
+                <!-- 下面是gooslist补充的内容 -->
+                <div class="abread bt-line">
+                        <el-breadcrumb separator="/">
+                            <el-breadcrumb-item :to="{ path: '/admin/layout' }">购物商城</el-breadcrumb-item>
+                            <el-breadcrumb-item>首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>内容管理</el-breadcrumb-item>
+                        </el-breadcrumb>
+                </div>
+                <!-- <el-breadcrumb separator="/">
+                    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+                    <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+                    <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+                  </el-breadcrumb> -->
+            </el-col>
+        </el-row>
+        <!-- 第三行：编辑及搜索行 -->
+        <div class="t">
+        <div class="operation">
+        <el-row>
+            <el-col :span="9">
+                <!-- 下面是gooslist补充的内容 -->
+                <!-- <span class="wrapper"> -->
+                    <el-button type="info"><i class="el-icon-plus icon"></i> 新增</el-button>
+                    <el-button type="success" @click="allSel"><i class="el-icon-check icon"></i> 全选</el-button>
+                    <el-button type="danger"><i class="el-icon-delete icon"></i> 删除</el-button>
+                <!-- </span> -->
+            </el-col>
+            <el-col :span="5" :offset="10">
+                    <el-input
+                    placeholder="请输入搜索内容"
+                    icon="search"
+                    v-model="searchvalue">
+                  </el-input>
+                </el-col>
+        </el-row>
+        </div></div>
+
+        <!-- 第四行 -->
+        <el-row>
+            <div class="table" style="padding:10px;">
+                <el-row>
+                <el-col :span="24">
+                    <el-table
+                        id="all"
+                        ref="multipleTable"
+                        :data="list"
+                        border
+                        tooltip-effect="dark"
+                        style="width: 100%;height:400px;overflow-y:scroll;">
+                        <el-table-column
+                        type="selection"
+                        width="55">
+                        </el-table-column>
+                        <el-table-column prop="title" label="标题">
+                        </el-table-column>
+                        <el-table-column prop="categoryname" label="类别" width="100">
+                            </el-table-column>
+                        <el-table-column label="发布人/发布时间"  width="200">
+                            <template scope="scope">
+                                {{scope.row.user_name }}  / {{scope.row.add_time}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="name" label="属性" width="200">
+                            </el-table-column>
+                            <el-table-column label="操作" width="80">
+                        <template scope="scope">
+                                <a href="#">修改</a>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div class="block" style="margin:20px auto;">
+                            <el-pagination
+                              @size-change="handleSizeChange"
+                              @current-change="handleCurrentChange"
+                              :current-page="currentPage"
+                              :page-sizes="pageSizes"
+                              :page-size="pageSize"
+                              layout="total, sizes, prev, pager, next, jumper"
+                              :total="totalcount">
+                            </el-pagination>
+                          </div>
+                </el-col>
+            </el-row>
+        </div>
+        </el-row>
+        <!-- 第四行结束 -->
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                searchvalue:'',
+                list:[],
+                pageCount:10,
+                totalpage:2,
+                totalcount:17,
+                pageSizes:[5,10],
+                pageSize:10,
+                currentPage:1
+            }
+        },
+        methods: {
+            getlist(){
+                var url  ='/admin/goods/getlist?pageIndex='+this.currentPage+'&pageSize='+this.pageSize+'&searchvalue=';
+                this.$http.get(url).then(res=>{
+                    if(res.data.status == 1){
+                        this.$message.error(res.data.message);
+                        return;
+                    }
+                    // 正常逻辑处理
+                    this.list = res.data.message;
+                    console.log(res.data);
+                    this.totalpage = Math.ceil(res.data.totalcount/this.pageCount);
+                    this.totalcount = res.data.totalcount;
+                })
+            },
+            handleCurrentChange(page){
+                this.currentPage = page;
+                var url  ='/admin/goods/getlist?pageIndex='+this.currentPage+'&pageSize='+this.pageSize+'&searchvalue=';
+                this.$http.get(url).then(res=>{
+                    if(res.data.status == 1){
+                        this.$message.error(res.data.message);
+                        return;
+                    }
+                    // 正常逻辑处理
+                    // console.log(111);
+                    this.list = res.data.message;
+                    console.log(res.data);
+                    this.totalpage = Math.ceil(res.data.totalcount/this.pageCount);
+                    this.totalcount = res.data.totalcount;
+                })
+            },
+            handleSizeChange(size){
+                this.pageSize = size;
+                var url  ='/admin/goods/getlist?pageIndex='+this.currentPage+'&pageSize='+this.pageSize+'&searchvalue=';
+                this.$http.get(url).then(res=>{
+                    if(res.data.status == 1){
+                        this.$message.error(res.data.message);
+                        return;
+                    }
+                    // 正常逻辑处理
+                    // console.log(111);
+                    this.list = res.data.message;
+                    console.log(res.data);
+                    this.totalpage = Math.ceil(res.data.totalcount/this.pageCount);
+                    this.totalcount = res.data.totalcount;
+                })
+            },
+            allSel(){
+                // alert('全选');
+                var checkBoxs1 = document.getElementsByClassName('el-checkbox__input');
+                for(var i = 0; i < checkBoxs1.length; i++){
+                    if(checkBoxs1[i].classList.contains('is-checked')){
+                        checkBoxs1[i].classList.remove('is-checked')
+                    }else{
+                        checkBoxs1[i].classList.add('is-checked');
+                    }
+                }
+                // var checkBoxs2 = document.getElementsByClassName('el-checkbox__input ischecked');
+                // for(var i = 0; i < checkBoxs2.length; i++){
+                //         checkBoxs2[i].className = 'el-checkbox__input';
+                // }
+            },
+            tableRowClassName(row,index){
+                if(index % 2 == 0){
+                    return 'info-row';
+                }else{
+                    return 'positive-row';
+                }
+            }
+        },
+        created:function(){
+            this.getlist();
+        }
+    }
+</script>
+<style scoped>
+   
+</style>
