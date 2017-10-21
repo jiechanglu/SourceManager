@@ -83,8 +83,6 @@ scrollview.contentSize =  CGSizeMake(0, 你要的宽度);
                 leftcol: 4,
                 // 控制右边菜单栏的宽度的
                 rightcol: 20,
-                searchvalue:'',
-                list:[]
             }
         },
         methods: {

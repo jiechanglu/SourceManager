@@ -67,9 +67,12 @@ body {
   padding-right: 10px;
   color: #686f7f;
 }
+.el-button a {
+  color: white;
+}
 .layout.menu {
   overflow: hidden;
-  min-height: 700px;
+  min-height: 1050px;
   background-color: #267cb7;
   margin-top: -4px;
 }
@@ -103,12 +106,14 @@ a {
 }
 .t .operation {
   border: 1px solid rgba(0, 0, 0, 0.1);
+  /* 只有底部多些 */
+  /* padding: 10px 10px 50px 10px; */
   padding: 10px;
   margin: 15px 0 0;
   border-radius: 10px;
 }
 .bt-line {
-  border-bottom: solid 1px #eee;
+  /* border-bottom: solid 1px #eee; */
 }
 .el-button.artlist.el-button--primary {
   color: #fff;
@@ -154,3 +159,46 @@ a {
   color: #2A72C5;
   font-size: 12px;
 }
+a {
+  color: #555;
+}
+.operation .el-form-item__content .el-input__inner {
+  width: 400px;
+}
+.operation .local .el-form-item__content .el-input__inner {
+  width: 250px;
+}
+.operation .productIfo .el-form-item__content .el-input__inner {
+  width: 150px;
+}
+.upload .el-col-11:first-of-type {
+  padding-left: 10px;
+}
+.upload-demo {
+  width: 350px;
+}
+.areaText .el-form-item__content {
+  width: 875px;
+}
+.el-upload {
+  display: inline-block;
+}
+.cell .icon {
+  font-size: 20px;
+  text-align: center;
+}
+.cell .on {
+  color: #50bfff;
+  padding: 0 5px;
+}
+.cell .off {
+  opacity: 0.5;
+  padding: 0 5px;
+}
+.ql-editor {
+  height: 200px;
+}
+textarea {
+  height: 180px;
+}
+

@@ -38,12 +38,14 @@ Vue.use(vueRouter);
 import layout from './components/admin/layout.vue'
 // 导入login.vue组件对象
 import login from './components/admin/account/login.vue'
-// 导入gooslist.vue
+// 导入goodslist.vue
 import goodslist from './components/admin/goods/goodslist.vue'
+// 导入goodsadd.vue
+import goodsadd from './components/admin/goods/goodsadd.vue'
 
 var router = new vueRouter({
     routes: [
-        { name: 'default', path: '/', redirect: '/admin' },
+        { name: 'default', path: '/', redirect: '/admin/layout' },
         { name: 'login', path: '/login', component: login },
         {
             name: 'layout',
@@ -51,6 +53,7 @@ var router = new vueRouter({
             component: layout,
             children: [
                 { name: 'goodslist', path: 'goodslist', component: goodslist },
+                { name: 'goodsadd', path: 'goodsadd', component: goodsadd },
             ]
         },
     ]
