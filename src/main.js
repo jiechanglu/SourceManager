@@ -45,11 +45,11 @@ import goodsadd from './components/admin/goods/goodsadd.vue'
 
 var router = new vueRouter({
     routes: [
-        { name: 'default', path: '/', redirect: '/admin/layout' },
+        { name: 'default', path: '/', redirect: '/admin' },
         { name: 'login', path: '/login', component: login },
         {
             name: 'layout',
-            path: '/admin/layout',
+            path: '/admin',
             component: layout,
             children: [
                 { name: 'goodslist', path: 'goodslist', component: goodslist },

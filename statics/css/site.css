@@ -72,7 +72,7 @@ body {
 }
 .layout.menu {
   overflow: hidden;
-  min-height: 1050px;
+  min-height: 1040px;
   background-color: #267cb7;
   margin-top: -4px;
 }
@@ -106,14 +106,12 @@ a {
 }
 .t .operation {
   border: 1px solid rgba(0, 0, 0, 0.1);
-  /* 只有底部多些 */
-  /* padding: 10px 10px 50px 10px; */
   padding: 10px;
   margin: 15px 0 0;
   border-radius: 10px;
 }
 .bt-line {
-  /* border-bottom: solid 1px #eee; */
+  border-bottom: solid 1px #eee;
 }
 .el-button.artlist.el-button--primary {
   color: #fff;
@@ -201,4 +199,3 @@ a {
 textarea {
   height: 180px;
 }
-

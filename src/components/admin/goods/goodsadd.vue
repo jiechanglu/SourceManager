@@ -22,7 +22,7 @@
                     <el-row>
                         <el-col :span="20">
                             <!-- 下面表单中:inline属性可设置为行内块样式表单即左右文字结构 -->
-                            <el-form :inline="true" :model="form" :rules="rules" ref="name" class="demo-form-inline">
+                            <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" class="demo-form-inline">
                                 <el-row>
                                     <div class="first">
                                         <el-col :span="12">
@@ -219,7 +219,10 @@
             }
         },
         methods: {
-            imgUploaded: function () { },
+            // 当上传完图片后，会触发:on-success事件，进而把imgList值定义
+            imgUploaded: function (res,file,filelist) { 
+                this.imgList = [res];
+             },
             fileUploaded: function () { },
             // 新增分类方法
             getCatelist: function () {
