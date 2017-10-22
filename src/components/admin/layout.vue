@@ -40,7 +40,7 @@
                                         <i @click="showhide" class="el-icon-menu layout area"></i>
                                     </el-col>
                                     <el-col :span="23">
-                                       <span style="font-size:15px;">欢迎 xxx 登录</span> 
+                                       <span style="font-size:15px;">欢迎<span>{{username}}</span>登录</span> 
                                        <el-dropdown split-button type="primary">
                                             更多
                                             <el-dropdown-menu slot="dropdown">                                          
@@ -83,6 +83,7 @@ scrollview.contentSize =  CGSizeMake(0, 你要的宽度);
                 leftcol: 4,
                 // 控制右边菜单栏的宽度的
                 rightcol: 20,
+                username:'admin'
             }
         },
         methods: {

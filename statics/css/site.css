@@ -175,6 +175,9 @@ a {
 .upload-demo {
   width: 350px;
 }
+.upload .el-form-item__content {
+  width: 350px;
+}
 .areaText .el-form-item__content {
   width: 875px;
 }
@@ -186,7 +189,6 @@ a {
   text-align: center;
 }
 .cell .on {
-  color: #50bfff;
   padding: 0 5px;
 }
 .cell .off {

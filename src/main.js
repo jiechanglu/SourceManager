@@ -34,18 +34,20 @@ import vueRouter from 'vue-router';
 // 将vueRouter和vue绑定起来
 Vue.use(vueRouter);
 // 定义路由规则
-// 导入后台管理系统 的整体而已组件 
-import layout from './components/admin/layout.vue'
 // 导入login.vue组件对象
 import login from './components/admin/account/login.vue'
+// 导入后台管理系统 的整体而已组件 
+import layout from './components/admin/layout.vue'
 // 导入goodslist.vue
 import goodslist from './components/admin/goods/goodslist.vue'
 // 导入goodsadd.vue
 import goodsadd from './components/admin/goods/goodsadd.vue'
+// 导入goodsedit.vue
+import goodsedit from './components/admin/goods/goodsedit.vue'
 
 var router = new vueRouter({
     routes: [
-        { name: 'default', path: '/', redirect: '/admin' },
+        { name: 'default', path: '/', redirect: '/login' },
         { name: 'login', path: '/login', component: login },
         {
             name: 'layout',
@@ -54,6 +56,7 @@ var router = new vueRouter({
             children: [
                 { name: 'goodslist', path: 'goodslist', component: goodslist },
                 { name: 'goodsadd', path: 'goodsadd', component: goodsadd },
+                { name: 'goodsedit', path: 'goodsedit/:id', component: goodsedit },
             ]
         },
     ]
@@ -69,8 +72,46 @@ axios.defaults.baseURL = 'http://157.122.54.189:9095';
 // 就要将axios对象持载到vue 的原型属性$http上
 Vue.prototype.$http = axios;
 
+// 设定axios的参数使得axios发出的ajax请求能够自动带上cookie
+axios.defaults.withCredentials = true;
+
 // 2.4 绑定到vue上
 Vue.use(axios);
+
+
+// 路由全局守卫（路由钩子函数）
+/*
+to: 当前要进入的路由
+form:代表来源路由
+next,要执行一下 next()方法才能正常渲染出组件页面
+*/
+router.beforeEach((to, from, next) => {
+    
+    // 1.0 如果进入的是登录页面则直接进入即可
+    // console.log(to);
+    /*
+     to:Object {name: "login", meta: Object, path: "/login", hash: "", query: Object…}
+    */ 
+    if(to.name == "login"){
+        // 当进入到的是登录页面，则不应该检查是否登录
+        next();
+    }
+    else{
+    // 发出 /admin/account/isloing 这个url的请求，如果它返回的是logined表示登录过，所以要执行next（）进程进入到想要
+    // 进入的组件页面，否则跳转到登录页面
+    // 1.0 发出ajax请求到/admin/account/isloing
+    axios.get('/admin/account/islogin').then(res=>{
+        // 如果res.data.code =="logined" 表示登录过
+        if(res.data.code =="logined"){
+            next();
+        }else{
+            // 跳转到登录页面
+            router.push({name:'login'});
+        }
+    });
+    }
+    
+  })
 
 // 3.0 使用elementUI这个ui框架的步骤
 // 3.1 导包

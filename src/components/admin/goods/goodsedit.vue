@@ -10,7 +10,7 @@
                         <el-breadcrumb-item :to="{ path: '/admin/goodslist' }">返回上一层</el-breadcrumb-item>
                         <el-breadcrumb-item>购物商城</el-breadcrumb-item>
                         <el-breadcrumb-item>首页</el-breadcrumb-item>
-                        <el-breadcrumb-item>新增内容</el-breadcrumb-item>
+                        <el-breadcrumb-item>编辑商品</el-breadcrumb-item>
                     </el-breadcrumb>
                 </div>
             </el-col>
@@ -47,8 +47,7 @@
                                             <el-form-item label="所属类型" required>
                                                 <el-select v-model="form.category_id" placeholder="请选择">
                                                     <el-option v-for="(item,index) in categoryList" :label="item.title" :value="item.category_id"><span v-for="count in (item.class_layer-1)">&nbsp;&nbsp;&nbsp;</span>
-                                                        <span
-                                                            v-if="item.class_layer>1">|-</span>{{item.title}}
+                                                        <span v-if="item.class_layer>1">|-</span>{{item.title}}
                                                     </el-option>
                                                 </el-select>
                                             </el-form-item>
@@ -167,14 +166,14 @@
     export default {
         data() {
             // 自定义表单验证
-            var checkNumber = (rule,value,callback)=>{
-                if(!value){
+            var checkNumber = (rule, value, callback) => {
+                if (!value) {
                     return callback(new Error('不能为空'));
                 }
-                if(isNaN(value)){
+                if (isNaN(value)) {
                     return callback(new Error('输入的值必须为一个数字'));
                 }
-                else{
+                else {
                     callback();
                 }
             };
@@ -207,23 +206,23 @@
                     ],
                     // 导入自定义表单验证
                     stock_quantity: [
-                        { validator:checkNumber, trigger: 'blur' }
+                        { validator: checkNumber, trigger: 'blur' }
                     ],
                     market_price: [
-                        { validator:checkNumber, trigger: 'blur' }
+                        { validator: checkNumber, trigger: 'blur' }
                     ],
                     sell_price: [
-                        { validator:checkNumber, trigger: 'blur' }
+                        { validator: checkNumber, trigger: 'blur' }
                     ],
                 }
             }
         },
         methods: {
             // 当上传完图片后，会触发:on-success事件，进而把imgList值定义
-            imgUploaded: function (res,file,fileList) { 
+            imgUploaded: function (res, file, fileList) {
                 this.form.imgList = [res];
-             },
-            fileUploaded: function (res,file,fileList) {
+            },
+            fileUploaded: function (res, file, fileList) {
                 // fileList的值就是当前上传的所有图片
                 // file 的值就是当前上传图片的返回对象
                 // response 当次响应对象
@@ -232,14 +231,17 @@
                 // console.log(fileList);
                 // 从服务器响应回来的数据对象增加到 form.imgList数组中即可
                 this.form.fileList.push(res);//单张封面图片
-             },
+            },
             // 新增分类方法
             getCatelist: function () {
                 this.$http.get('/admin/category/getlist/goods').then(res => {
                     // alert(111);
                     // console.log(res.data);
                     this.categoryList = res.data.message;
-                    console.log(this.categoryList)
+                    // console.log(this.categoryList)
+                    // 由于在请求回属性类型数据的时候，不知道增加数据是否请求成功，所以在请求完成后再请求
+                    console.log(2222);
+                    this.getEditData();
 
                 });
             },
@@ -247,30 +249,43 @@
             resetForm(formref) {
                 this.$refs[formref].resetFields();
             },
-             // 用来提交表单元素到服务器api接口的
-             submitForm(formref) {
+            // 用来提交表单元素到服务器api接口的
+            submitForm(formref) {
                 // 验证当前表单元素是否符合规则
                 this.$refs[formref].validate((valid) => {
                     // 如果表单的所有元素值均合法，valid则返回true
                     if (valid) {
-                        // ajax提交数据进行新增操作
-                        this.$http.post('/admin/goods/add/goods', this.form)
-                        .then(res=>{
-                            if(res.data.status == 1){
-                                this.$message.error(res.data.message);
-                                return;
-                            }
+                        // ajax提交数据进行编辑保存操作
+                        this.$http.post('/admin/goods/edit/'+this.$route.params.id, this.form)
+                            .then(res => {
+                                if (res.data.status == 1) {
+                                    this.$message.error(res.data.message);
+                                    return;
+                                }
 
-                            // 数据新增成功以后跳转到商品列表页面
-                            // 利用vue-router的编程式导航实现页面的跳转
-                            this.$router.push({name:'goodslist'});
-                        });
+                                // 数据新增成功以后跳转到商品列表页面
+                                // 利用vue-router的编程式导航实现页面的跳转
+                                this.$router.push({ name: 'goodslist' });
+                            });
                         // console.log(this.form);
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
+            },
+            // 获取回显要编辑的商品数据
+            getEditData: function () {
+                console.log(33333);
+                var goodsid = this.$route.params.id;
+                this.$http.get('/admin/goods/getgoodsmodel/' + goodsid).then((res) => {
+                    if (res.data.status === 1) {
+                        this.$message.error(res.data.message);
+                        return;
+                    }
+                    this.form = res.data.message;
+                    this.form.category_id = (res.data.message.category_id - 0);
+                })
             }
         },
         created: function () {
@@ -279,7 +294,8 @@
         // 导入富文本编辑框
         components: {
             quillEditor
-        }
+        },
+
     }
 
 </script>
